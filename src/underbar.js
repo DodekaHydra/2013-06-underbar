@@ -5,17 +5,41 @@ var _ = {};
   // Return an array of the last n elements of an array. If n is undefined,
   // return just the last element.
   _.last = function(array, n) {
+    if (Array.isArray(array) == false) { //if array is not an array, make array from arguments
+      array = Array.prototype.slice.call(array);
+    }
+    if (n == null){
+      return array[array.length-1];
+    }
+    else if (n == 0){
+      return [];
+    }
+    else if (n > array.length){
+      return array;
+    }
+    else if (n != null) {
+      return array.slice(array.length-n, array.length);
+    }
   };
 
   // Like last, but for the first elements
   _.first = function(array, n) {
-    // TIP: you can often re-use similar functions in clever ways, like so:
-    return _.last(array.reverse(), n);
+    if (Array.isArray(array) == false) {
+      array = Array.prototype.slice.call(array);      
+    }
+    if (n == null){
+      return array[0];
+    }
+    return _.last(array.reverse(), n).reverse();
   };
 
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
+    for (var index = 0; index < obj.length; index++) {
+      iterator(obj[index], index, obj);
+    };
+    return iterator;
   };
 
   /*
@@ -40,16 +64,35 @@ var _ = {};
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+    var result = [];
+    _.each(collection, function(val, index, arr){ // for each in collection
+      if (iterator.call(collection, val, index, arr)) { result.push(val); } // call iterator with data; if true, assign res
+    });
+    return result;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(val, index, arr){ //call filter on iterator
+      return !iterator.call(collection, val, index, arr); //returns all false matches
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var result = [], innerIndex = 0, innerArray = [], dupe = false;
+    _.each(array, function(value, index, array){                           //for val[ind] in arr
+      result.push(value);                                                  //push each conseq element into array
+      _.each(innerArray, function(innerValue, innerIndex, innerArray){     //for innerVal[innerInd] in innerArr
+        if (innerValue == value) { dupe=true; } //seems awkward
+      });
+      if (dupe) { result.pop(); dupe=false; }
+      innerIndex = index;
+      innerArray.push(value);
+    });
+    return result;
   };
 
 
@@ -61,6 +104,11 @@ var _ = {};
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    var result=[];
+    _.each(array, function(value, index, array){
+      result.push(iterator.call(iterator, value, index, array));
+    });
+    return result;
   };
 
   /*
@@ -80,6 +128,11 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
+    
+    var args = Array.prototype.slice.apply(arguments);
+    return _.map(list, function(value){
+      return (typeof value[methodName] !== 'undefined' ? value[methodName].apply(value,args) : methodName.apply(value,args)); 
+    });
   };
 
   // Reduces an array or object to a single value by repetitively calling

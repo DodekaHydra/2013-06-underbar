@@ -24,7 +24,7 @@ describe("last", function() {
 
 });
 
-/*
+
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
@@ -201,7 +201,7 @@ describe("reduce", function() {
   });
 
 });
-
+/*
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
     expect(_.contains([1,2,3], 2)).to.equal(true);
