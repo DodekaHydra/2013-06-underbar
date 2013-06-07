@@ -8,26 +8,18 @@ var _ = {};
     if (Array.isArray(array) == false) { //if array is not an array, make array from arguments
       array = Array.prototype.slice.call(array);
     }
-    if (n == null){
-      return array[array.length-1];
-    }
-    else if (n == 0){
-      return [];
-    }
-    else if (n > array.length){
-      return array;
-    }
-    else if (n != null) {
-      return array.slice(array.length-n, array.length);
-    }
+    // cases of n; would switch/case be more optimal? nested pattern matching? this seems messy
+    if (n == null){ return array[array.length-1]; }
+    else if (n == 0){ return []; }
+    return ( n > array.length ? array : array.slice(array.length-n, array.length) );
   };
 
   // Like last, but for the first elements
   _.first = function(array, n) {
-    if (Array.isArray(array) == false) {
+    if (Array.isArray(array) == false) { // same as in _.last; is there a way to remove this part? 
       array = Array.prototype.slice.call(array);      
     }
-    if (n == null){
+    if (n == null){ 
       return array[0];
     }
     return _.last(array.reverse(), n).reverse();
@@ -141,14 +133,14 @@ var _ = {};
   //
   // You can pass in an initialValue that is passed to the first iterator
   // call. Defaults to 0.
-  //
-  // Example:
-  //   var numbers = [1,2,3];
-  //   var sum = _.reduce(numbers, function(total, number){
-  //     return total + number;
-  //   }, 0); // should be 6
-  //
+
   _.reduce = function(obj, iterator, initialValue) {
+    var result = 0;
+    if (typeof initialValue != 'undefined') { result = initialValue; }
+    _.each(obj, function(val, ind, obj){
+      result = iterator(result, val);
+    });
+    return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -167,6 +159,9 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
+    return _.reduce(obj, function(test, iterator){
+      
+    };
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is

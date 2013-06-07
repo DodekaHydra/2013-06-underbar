@@ -201,7 +201,7 @@ describe("reduce", function() {
   });
 
 });
-/*
+
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
     expect(_.contains([1,2,3], 2)).to.equal(true);
@@ -249,7 +249,7 @@ describe("every", function() {
     expect(_.every([undefined, undefined, undefined], getValue)).to.equal(false);
   });
 });
-
+/*
 describe("any", function() {
   var nativeSome = Array.prototype.some;
   var isEven = function(number){
