@@ -127,12 +127,13 @@ var _ = {};
     });
   };
 
-  // Reduces an array or object to a single value by repetitively calling
-  // iterator(previousValue, item) for each item. previousValue should be
-  // the return value of the previous iterator call.
-  //
-  // You can pass in an initialValue that is passed to the first iterator
-  // call. Defaults to 0.
+// Reduces an array or object to a single value by repetitively calling
+// iterator(previousValue, item) for each item. previousValue should be
+// the return value of the previous iterator call.
+//
+// You can pass in an initialValue that is passed to the first iterator
+// call. If there's no initialValue, we should use the first element in
+// our input `obj`.
 
   _.reduce = function(obj, iterator, initialValue) {
     var result = 0;
@@ -140,7 +141,24 @@ var _ = {};
     _.each(obj, function(val, ind, obj){
       result = iterator(result, val);
     });
+   return result;
+
+
+ /**   var initialExists = (initialValue !== undefined);
+    var result;
+    result = (initialExists) ? initialValue : obj[0]; 
+    _.each(obj, function(val, ind, obj){
+      result = (initialExists && ind==0) ? iterator.call(result, ind, obj) : iterator.call(result, val, ind, obj);
+    });
     return result;
+
+  /**  var initialExists = (initialValue !== undefined);
+    var result;
+    _.each(obj, function(val, ind, obj) {
+      if (!initialExists && ind==0) result = val;
+      result = iterator.call(result, val, ind, obj);
+    });
+    return result; **/
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -150,7 +168,7 @@ var _ = {};
     return _.reduce(collection, function(wasFound, item){
       if(wasFound){
         return true;
-      }
+      };
       return item === target;
     }, false);
   };
@@ -159,9 +177,11 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
-    return _.reduce(obj, function(test, iterator){
-      
-    };
+    // reduce(obj, iterator, initial)
+    return _.reduce(obj, function(test, item){
+      if(!test) return false;
+      return (typeof iterator(item) === "boolean") ? iterator(item) : iterator == item;
+    }, true);       
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -188,6 +208,10 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
+    _.each(Array.prototype.slice.call(arguments), function(val, ind, arr){
+      obj[ind] = arr[ind];
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -229,6 +253,9 @@ var _ = {};
   // Memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  //
+  // use .apply(this, arguments) possibly
+  
   _.memoize = function(func) {
   };
 

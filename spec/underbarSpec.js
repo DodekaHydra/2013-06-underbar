@@ -249,7 +249,7 @@ describe("every", function() {
     expect(_.every([undefined, undefined, undefined], getValue)).to.equal(false);
   });
 });
-/*
+
 describe("any", function() {
   var nativeSome = Array.prototype.some;
   var isEven = function(number){
@@ -334,7 +334,7 @@ describe("extend", function() {
     expect(extended.hasOwnProperty('a') && extended.hasOwnProperty('b')).to.be(true);
   });
 });
-
+/**
 describe("defaults", function() {
   var result, options;
 
