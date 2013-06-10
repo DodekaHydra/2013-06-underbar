@@ -249,7 +249,7 @@ var _ = {};
     var sliced = Array.prototype.slice.call(arguments);
     _.each(sliced, function(obj1){
       for (var prop in obj1){
-        obj[prop] = (typeof obj[prop] === "undefined") ? obj1[prop] : obj[prop];
+        if (!obj[prop]) obj[prop] = obj1[prop];
       }
     });
     return obj;
@@ -293,6 +293,9 @@ var _ = {};
   // use .apply(this, arguments) possibly
   
   _.memoize = function(func) {
+    var result;
+    if (!result) result = _.once(func);
+    return result;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -302,6 +305,13 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var result;
+    var args = Array.prototype.slice.call(arguments, 2);
+    if (!wait) result = func.apply(this, arguments);
+    result = setTimeout(function(){
+      func.apply(this, args);
+    }, wait);
+    return result;
   };
 
 
@@ -319,6 +329,11 @@ var _ = {};
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
+
+// Mathematica Sort[]
+// Sort[list,p] applies the function p to pairs of elements in list to determine 
+// whether they are in order. The default function p is OrderedQ[{#1,#2}]&. 
+  
   _.sortBy = function(collection, iterator) {
   };
 
@@ -327,6 +342,17 @@ var _ = {};
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3]]
+
+/** Mathematica Riffle[]
+Riffle[{Subscript[e, 1],Subscript[e, 2],...},x]
+gives {Subscript[e, 1],x,Subscript[e, 2],x,...}. 
+Riffle[{Subscript[e, 1],Subscript[e, 2],...},{Subscript[x, 1],Subscript[x, 2],...}]
+gives {Subscript[e, 1],Subscript[x, 1],Subscript[e, 2],Subscript[x, 2],...}. 
+Riffle[list,x,n]
+yields a list in which every n\[Null]^th element is x. 
+Riffle[list,x,{Subscript[i, min],Subscript[i, max],n}]
+yields a list in which x appears if possible at positions Subscript[i, min], Subscript[i, min]+n, Subscript[i, min]+2n, ... , Subscript[i, max]. 
+**/
   _.zip = function() {
   };
 
@@ -334,17 +360,36 @@ var _ = {};
   // contains all the elements of all the nested arrays.
   //
   // Hints: Use Array.isArray to check if something is an array
-  //
+
+/** Mathematica Flatten[]
+Flatten[list]
+flattens out nested lists. 
+Flatten[list,n]
+flattens to level n. 
+Flatten[list,n,h]
+flattens subexpressions with head h. 
+**/
+
   _.flatten = function(nestedArray, result) {
   };
 
   // Produce an array that contains every item shared between all the
   // passed-in arrays.
+
+// Mathematica Intersection[]
+// Intersection[Subscript[list, 1],Subscript[list, 2],...]
+// gives a sorted list of the elements common to all the Subscript[list, i]. 
+
   _.intersection = function(array) {
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
+
+// Mathematica Complement[]
+// Complement[Subscript[e, all],Subscript[e, 1],Subscript[e, 2],...]
+// gives the elements in Subscript[e, all] which are not in any of the Subscript[e, i]. 
+  
   _.difference = function(array) {
   };
 

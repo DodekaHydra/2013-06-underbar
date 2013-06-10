@@ -393,7 +393,7 @@ describe("memoize", function() {
     expect(fastPassThrough('toString')).to.equal('toString');
   });
 });
-/**
+
 describe("delay", function() {
   var clock, delayed, callback;
 
@@ -422,7 +422,7 @@ describe("delay", function() {
     expect(callback.calledWith(1, 2)).to.be(true);
   });
 });
-
+/**
 describe("shuffle", function() {
   it("should not modify the original object", function() {
     var numbers = _.range(10);
