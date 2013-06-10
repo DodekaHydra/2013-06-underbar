@@ -180,7 +180,7 @@ var _ = {};
     // reduce(obj, iterator, initial)
     return _.reduce(obj, function(test, item){
       if(!test) return false;
-      return (typeof iterator(item) === "boolean") ? iterator(item) : iterator == item;
+      return (typeof iterator(item) === "boolean") ? iterator(item) : item == iterator;
     }, true);       
   };
 
@@ -188,6 +188,20 @@ var _ = {};
   // provided, provide a default one
   _.any = function(obj, iterator) {
     // TIP: re-use every() here
+    var any = false;
+    var result;
+    if (!obj) return any;
+    result = _.filter(obj, function(val, ind, arr){
+      return (iterator) ? iterator.call(obj,val,ind,arr) : val;
+    });
+    if (result.length>0) any=true;
+    return any;
+  /**  _.every(obj, function(test, item){
+      if (!item) { any=false; return any; }
+      any = iterator.call(any, test, item);
+      if (any || item == iterator) return escapeFunction;
+    }, true);
+    return !!any; **/
   };
 
 
@@ -208,8 +222,9 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
-    _.each(Array.prototype.slice.call(arguments), function(val, ind, arr){
-      obj[ind] = arr[ind];
+    obj = Array.prototype.slice.call(arguments);
+    _.each(obj, function(val, ind, arr){
+      if (val) obj[ind] = arr[ind];
     });
     return obj;
   };
