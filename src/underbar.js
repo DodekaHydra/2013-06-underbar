@@ -197,6 +197,10 @@ var _ = {};
   // provided, provide a default one
   _.any = function(obj, iterator) {
     // TIP: re-use every() here
+    // filter() does it faster
+    // any -> filter -> each
+    // any -> every -> reduce -> each
+
     var any = false, result;
     if (!obj) return any;
     result = _.filter(obj, function(val, ind, arr){
@@ -230,9 +234,11 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
-    var sliced = slice.call(arguments)
-    _.each(sliced, function(val, ind, sliced){
-      obj[ind] = sliced[ind];
+    var sliced = Array.prototype.slice.call(arguments);
+    _.each(sliced, function(obj1){
+      for (var prop in obj1){
+        obj[prop]=obj1[prop];
+      }
     });
     return obj;
   };
@@ -240,6 +246,13 @@ var _ = {};
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var sliced = Array.prototype.slice.call(arguments);
+    _.each(sliced, function(obj1){
+      for (var prop in obj1){
+        obj[prop] = (typeof obj[prop] === "undefined") ? obj1[prop] : obj[prop];
+      }
+    });
+    return obj;
   };
 
 
