@@ -195,9 +195,9 @@ var _ = {};
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.any = function(obj, iterator) {
+  _.some = function(obj, iterator) {
     // TIP: re-use every() here
-    // filter() does it faster
+    // filter() does it faster, possibly?
     // any -> filter -> each
     // any -> every -> reduce -> each
 
@@ -249,7 +249,7 @@ var _ = {};
     var sliced = Array.prototype.slice.call(arguments);
     _.each(sliced, function(obj1){
       for (var prop in obj1){
-        if (!obj[prop]) obj[prop] = obj1[prop];
+        obj[prop] = (typeof obj[prop] === "undefined") ? obj1[prop] : obj[prop];
       }
     });
     return obj;
@@ -293,8 +293,11 @@ var _ = {};
   // use .apply(this, arguments) possibly
   
   _.memoize = function(func) {
+    var args;
+    args.push(Array.prototype.slice.call(arguments));
+    var isUniq = _.uniq
     var result;
-    if (!result) result = _.once(func);
+    if (!result ) result = _.once(func);
     return result;
   };
 
@@ -318,9 +321,40 @@ var _ = {};
   /*
    * Advanced collection operations
    */
+   // I stole _.range from underscore to use it for shuffle. 
+
+  _.range = function(start, stop, step) {
+    if (arguments.length <= 1) {
+      stop = start || 0;
+      start = 0;
+    }
+    step = arguments[2] || 1;
+
+    var len = Math.max(Math.ceil((stop - start) / step), 0);
+    var idx = 0;
+    var range = new Array(len);
+
+    while(idx < len) {
+      range[idx++] = start;
+      start += step;
+    }
+
+    return range;
+  };
 
   // Shuffle an array.
   _.shuffle = function(obj) {
+    if (Array.isArray(obj)) var len = obj.length;
+    var range = [];
+    range = _.range(len);
+    var newObj = [];
+    _.each(obj, function(val, ind, obj){
+      var nextVal = range[Math.floor(Math.random()*len)];
+      newObj.push(nextVal);
+      range.splice(range.indexOf(nextVal),1);
+      len--;
+    });
+    return newObj;
   };
 
   /* (End of pre-course curriculum) */
