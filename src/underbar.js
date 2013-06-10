@@ -28,9 +28,16 @@ var _ = {};
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
-    for (var index = 0; index < obj.length; index++) {
-      iterator(obj[index], index, obj);
-    };
+    if (typeof obj.length === "number") {
+      for (var index = 0; index < obj.length; index++) {
+        iterator(obj[index], index, obj);
+      }
+    }
+    else {
+      for (var key in obj) {
+        iterator(obj[key], key, obj);
+      }
+    }
     return iterator;
   };
 
@@ -178,21 +185,22 @@ var _ = {};
   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
     // reduce(obj, iterator, initial)
-    return _.reduce(obj, function(test, item){
+    var result;
+    result = _.reduce(obj, function(test, item){
       if(!test) return false;
       return (typeof iterator(item) === "boolean") ? iterator(item) : item == iterator;
-    }, true);       
+    }, true);
+    return !!result;       
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.any = function(obj, iterator) {
     // TIP: re-use every() here
-    var any = false;
-    var result;
+    var any = false, result;
     if (!obj) return any;
     result = _.filter(obj, function(val, ind, arr){
-      return (iterator) ? iterator.call(obj,val,ind,arr) : val;
+      return (iterator) ? iterator.call(obj,val,ind,arr) : val; //if no iterator, use val
     });
     if (result.length>0) any=true;
     return any;
@@ -222,9 +230,9 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
-    obj = Array.prototype.slice.call(arguments);
-    _.each(obj, function(val, ind, arr){
-      if (val) obj[ind] = arr[ind];
+    var sliced = slice.call(arguments)
+    _.each(sliced, function(val, ind, sliced){
+      obj[ind] = sliced[ind];
     });
     return obj;
   };
