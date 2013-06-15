@@ -184,11 +184,12 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
-    // reduce(obj, iterator, initial)
+    // reduce(obj, iterator, initial)ii
     var result;
     result = _.reduce(obj, function(test, item){
       if(!test) return false;
-      return (typeof iterator(item) === "boolean") ? iterator(item) : item == iterator;
+      else if(!iterator) return !!item;  
+      return (typeof iterator(item) === "boolean") ? iterator(item) : item === test;
     }, true);
     return !!result;       
   };
@@ -369,6 +370,20 @@ var _ = {};
 // whether they are in order. The default function p is OrderedQ[{#1,#2}]&. 
   
   _.sortBy = function(collection, iterator) {
+    var a=[], result=[];
+    //if (typeof iterator == "string"){
+      // difference between _.each(arr, fun(val,ind,arr)) and _.each(collection, fun(val,ind,arr)) ?
+      result = _.each(collection, function(val, ind, collection) {
+        for(var prop in collection){
+          if (collection[prop] < collection[ind]) {
+            a = collection[prop];
+            collection[prop] = collection[ind];
+            collection[ind] = a;
+          };
+        };
+      });
+    //};
+    return result;
   };
 
   // Zip together two or more arrays with elements of the same index

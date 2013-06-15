@@ -426,7 +426,7 @@ describe("shuffle", function() {
     expect(shuffled).to.not.equal(numbers);
   });
 });
-/**
+
 describe("sortBy", function() {
   it("should sort by age", function() {
     var people = [{name : 'curly', age : 50}, {name : 'moe', age : 30}];
@@ -477,6 +477,7 @@ describe("sortBy", function() {
   });
 });
 
+/**
 describe("flatten", function() {
   it("can flatten nested arrays", function() {
     var nestedArray = [1, [2], [3, [[[4]]]]];
